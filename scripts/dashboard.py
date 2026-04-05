@@ -20,21 +20,36 @@ st.set_page_config(page_title="Hospital Analytics", layout="wide")
 # ---------------------------------------------------------------------------
 # Database connection
 # ---------------------------------------------------------------------------
-DB_NAME = os.getenv("DB_NAME", "hospital_analytics")
-DB_USER = os.getenv("DB_USER", "ifratzaman")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "")
-DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_PORT = os.getenv("DB_PORT", "5433")
+# On Streamlit Cloud, st.secrets["database"]["url"] holds the full connection
+# string (e.g. postgresql+psycopg2://user:pass@host/db).
+# Locally, fall back to individual DB_* environment variables.
+def _build_url() -> str:
+    try:
+        return st.secrets["database"]["url"]
+    except (KeyError, FileNotFoundError):
+        pass
+    DB_NAME = os.getenv("DB_NAME", "hospital_analytics")
+    DB_USER = os.getenv("DB_USER", "ifratzaman")
+    DB_PASSWORD = os.getenv("DB_PASSWORD", "")
+    DB_HOST = os.getenv("DB_HOST", "localhost")
+    DB_PORT = os.getenv("DB_PORT", "5433")
+    if DB_PASSWORD:
+        return f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    return f"postgresql+psycopg2://{DB_USER}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 
 @st.cache_resource
 def get_engine():
-    if DB_PASSWORD:
-        url = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-    else:
-        url = f"postgresql+psycopg2://{DB_USER}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-    connect_args = {"sslmode": "require"} if DB_HOST not in ("localhost", "127.0.0.1") else {}
-    return create_engine(url, connect_args=connect_args)
+    url = _build_url()
+    try:
+        engine = create_engine(url, connect_args={"sslmode": "require"})
+        # Verify the connection is actually reachable
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        return engine
+    except Exception as exc:
+        st.error(f"Database connection failed: {exc}")
+        st.stop()
 
 
 # ---------------------------------------------------------------------------
