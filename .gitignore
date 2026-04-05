@@ -1,0 +1,8 @@
+Kaggle.txt
+.env
+data/
+reports/charts/
+CLAUDE.md
+__pycache__/
+*.pyc
+.DS_Store

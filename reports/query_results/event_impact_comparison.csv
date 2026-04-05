@@ -1,0 +1,5 @@
+event,avg_patient_satisfaction,avg_staff_morale,avg_patients_admitted,avg_patients_refused,avg_occupancy_rate
+donation,82.71,80.14,25.57,29.14,90.66
+flu,78.74,72.89,35.11,126.16,100.0
+none,79.73,73.15,27.82,28.38,92.67
+strike,82.82,53.73,23.91,16.64,78.82

@@ -1,0 +1,13 @@
+role,service,attendance_rate
+doctor,general_medicine,58.08
+nurse,general_medicine,58.77
+doctor,emergency,58.89
+doctor,ICU,59.29
+nursing_assistant,surgery,59.62
+nursing_assistant,ICU,60.04
+nursing_assistant,general_medicine,60.16
+nurse,surgery,60.22
+nurse,ICU,60.43
+nurse,emergency,60.75
+nursing_assistant,emergency,60.9
+doctor,surgery,61.54

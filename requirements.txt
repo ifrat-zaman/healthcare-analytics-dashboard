@@ -1,0 +1,9 @@
+kagglehub
+pandas
+numpy
+pyarrow
+psycopg2-binary
+sqlalchemy
+streamlit
+plotly
+python-dotenv
