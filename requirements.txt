@@ -6,4 +6,5 @@ psycopg2-binary
 sqlalchemy
 streamlit
 plotly
+statsmodels
 python-dotenv
